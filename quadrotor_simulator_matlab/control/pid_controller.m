@@ -19,16 +19,16 @@ persistent icnt;
 % =================== Your code starts here ===================
 %% Parameter Initialization
 % Position control gains
-kp = [4.15; 4.15; 3];
-kd = [10.25; 10.25; 3.5];
+kp = [1; 6; 0.6];
+kd = [5; 12 ;1];
 
 % Attitude control gains
 kpr = 0.5;
 kpp = 0.5;
 kpy = 1.2;
 
-kdr = 3.0;
-kdp = 3.0;
+kdr = 4.0;
+kdp = 4.0;
 kdy = 1.8;
 
 

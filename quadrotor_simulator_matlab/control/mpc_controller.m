@@ -24,6 +24,27 @@ end
 F = 0;
 M = [0;0;0];
 
+% X = [x; y; z;x_dot; y_dot; z_dot; r; p; y; p; q; r] X_dot = [x_dot; y_dot; z_dot; xdd; ydd; zdd; p; q; r; p_dot; q_dot; r_dot]
+
+m = params.mass;
+g = params.grav;
+
+Ixx = 1.43;
+Iyy = 1.43;
+Izz = 2.89;
+
+
+A = [zeros(3), eye(3), zeros(3,6);
+     zeros(3,6), diag([1, -1, 0]), zeros(3)
+     zeros(3, 9), eye(3);
+     zeros(3, 12)];
+
+B = [zeros(5, 4);
+    [1/m, 0, 0, 0];
+    zeros(3, 4);
+    zeros(3, 1), diag([1/Ixx, 1/Iyy, 1/Izz])];
+
+
 
 %Output trpy and drpy as in hardware
 trpy = [0, 0, 0, 0];

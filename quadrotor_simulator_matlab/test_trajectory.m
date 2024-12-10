@@ -12,9 +12,9 @@ function [xtraj, ttraj, terminate_cond] = test_trajectory(start, stop, map, path
 trajhandle    = @diamond;
 
 %Controller and trajectory generator handles
-%controlhandle = @pid_controller;
-%controlhandle = @(qd, t, qn, params)lqr_controller(qd, t, qn, params, trajhandle);
-controlhandle = @(qd, t, qn, params)mpc_controller(qd, t, qn, params, trajhandle);
+% controlhandle = @pid_controller;
+controlhandle = @(qd, t, qn, params)lqr_controller(qd, t, qn, params, trajhandle);
+% controlhandle = @(qd, t, qn, params)mpc_controller(qd, t, qn, params, trajhandle);
 
 % Make cell
 if ~iscell(start), start = {start}; end
@@ -57,6 +57,7 @@ drawnow;
 xlabel('x [m]'); ylabel('y [m]'); zlabel('z [m]')
 quadcolors = lines(nquad);
 set(gcf,'Renderer','OpenGL')
+view(3)
 
 %% *********************** INITIAL CONDITIONS ***********************
 fprintf('Setting initial conditions...\n')

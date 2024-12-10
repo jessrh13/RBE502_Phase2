@@ -16,12 +16,55 @@ persistent icnt;
  icnt = icnt + 1;
 
 %% Parameter Initialization
+
 if ~isempty(t)
 desired_state = trajhandle(t, qn);
 end
 
-F = 0;
-M = [0;0;0];
+% F = 0;
+% M = [0;0;0];
+
+X = [qd{qn}.pos; qd{qn}.vel; qd{qn}.euler; qd{qn}.omega];
+
+euler_des = [0; 0; desired_state.yaw];
+omega_des = [0; 0; desired_state.yawdot];
+
+X_des = [desired_state.pos; desired_state.vel; euler_des; omega_des];
+
+m = params.mass;
+g = params.grav;
+
+Ixx = 1.43;
+Iyy = 1.43;
+Izz = 2.89;
+
+l = 0.046;
+
+A = [zeros(3), eye(3), zeros(3,6);
+     zeros(3,6), [0 g 0; -g 0 0; 0 0 0], zeros(3)
+     zeros(3, 9), eye(3);
+     zeros(3, 12)];
+
+B = [zeros(5, 4);
+    [1/m, 0, 0, 0];
+    zeros(3, 4);
+    zeros(3, 1), diag([1/Ixx, l/Iyy, l/Izz])];
+
+
+R = 10;
+Q = 0.1.*eye(12);
+
+[K, ~, ~] = lqr(A,B,Q,R);
+
+u = -K * (X - X_des);
+
+F = u(1);
+
+M = u(2:4);
+
+
+
+
 
 
 %Output trpy and drpy as in hardware
