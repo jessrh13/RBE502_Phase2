@@ -8,13 +8,13 @@ function [xtraj, ttraj, terminate_cond] = test_trajectory(start, stop, map, path
 % vis   - true for displaying visualization
 
 %trajhandle    = @jump;
-%trajhandle    = @circle;
-trajhandle    = @diamond;
+trajhandle    = @circle;
+% trajhandle    = @diamond;
 
 %Controller and trajectory generator handles
 % controlhandle = @pid_controller;
-controlhandle = @(qd, t, qn, params)lqr_controller(qd, t, qn, params, trajhandle);
-% controlhandle = @(qd, t, qn, params)mpc_controller(qd, t, qn, params, trajhandle);
+K = @(qd, t, qn, params)lqr_controller(qd, t, qn, params, trajhandle);
+% controlhandle = @(qd, t, qn, params)mpc_controller(qd, t, qn, paramsf, trajhandle);
 
 % Make cell
 if ~iscell(start), start = {start}; end
@@ -57,7 +57,7 @@ drawnow;
 xlabel('x [m]'); ylabel('y [m]'); zlabel('z [m]')
 quadcolors = lines(nquad);
 set(gcf,'Renderer','OpenGL')
-view(3)
+% view(3)
 
 %% *********************** INITIAL CONDITIONS ***********************
 fprintf('Setting initial conditions...\n')
@@ -97,6 +97,8 @@ for iter = 1:max_iter
             QP{qn}.UpdateQuadPlot(x{qn}, [desired_state.pos; desired_state.vel], time);
             h_title = title(sprintf('iteration: %d, time: %4.2f', iter, time));
         end
+        k = K(stateToQd(x{qn}), time, qn, params);
+        controlhandle = @(qd, t, qn, params) lqr_controller_handle(k, qd, qn, t, params, trajhandle);
 
         % Run simulation
         [tsave, xsave] = ode45(@(t,s) quadEOM(t, s, qn, controlhandle, trajhandle, params), timeint, x{qn});
@@ -117,7 +119,7 @@ for iter = 1:max_iter
 
     % Pause to make real-time   
     if (t < cstep)
-        pause(cstep - t);
+%         pause(cstep - t);
     end
 
     % Check termination criteria

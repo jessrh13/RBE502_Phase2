@@ -25,6 +25,10 @@ F = 0;
 M = [0;0;0];
 
 % X = [x; y; z;x_dot; y_dot; z_dot; r; p; y; p; q; r] X_dot = [x_dot; y_dot; z_dot; xdd; ydd; zdd; p; q; r; p_dot; q_dot; r_dot]
+euler_des = [0; 0; desired_state.yaw];
+omega_des = [0; 0; desired_state.yawdot];
+
+X_des = [desired_state.pos; desired_state.vel; euler_des; omega_des]
 
 m = params.mass;
 g = params.grav;

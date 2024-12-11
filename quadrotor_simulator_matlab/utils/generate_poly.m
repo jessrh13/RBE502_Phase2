@@ -1,5 +1,4 @@
 function f = generate_poly(max_exponent,max_diff,symbol)
-
 for k = 0:max_diff
     for i = 0:max_exponent
         if (i - k) >= 0
