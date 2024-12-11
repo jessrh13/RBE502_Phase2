@@ -57,7 +57,7 @@ drawnow;
 xlabel('x [m]'); ylabel('y [m]'); zlabel('z [m]')
 quadcolors = lines(nquad);
 set(gcf,'Renderer','OpenGL')
-view(3)
+% view(3)
 
 %% *********************** INITIAL CONDITIONS ***********************
 fprintf('Setting initial conditions...\n')

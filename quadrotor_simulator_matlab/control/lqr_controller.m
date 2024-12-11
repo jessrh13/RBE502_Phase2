@@ -28,32 +28,43 @@ X = [qd{qn}.pos; qd{qn}.vel; qd{qn}.euler; qd{qn}.omega];
 
 euler_des = [0; 0; desired_state.yaw];
 omega_des = [0; 0; desired_state.yawdot];
-
+% 
 X_des = [desired_state.pos; desired_state.vel; euler_des; omega_des];
+ 
+% params
 
 m = params.mass;
 g = params.grav;
 
-Ixx = 1.43;
-Iyy = 1.43;
-Izz = 2.89;
+l = params.arm_length;
 
-l = 0.046;
+Ixx = 1.43e-5;
+Iyy = 1.43e-5;         
+Izz = 2.89e-5;
 
+% phi = qd{qn}.euler(1);
+% theta = qd{qn}.euler(2);
+% psi = qd{qn}.euler(3);
+% 
+% v = [cos(theta) 0 -cos(phi)*sin(theta);...
+%     0 1 sin(phi);...
+%     sin(theta) 0 cos(phi)*cos(theta)];
+
+ 
 A = [zeros(3), eye(3), zeros(3,6);
      zeros(3,6), [0 g 0; -g 0 0; 0 0 0], zeros(3)
-     zeros(3, 9), eye(3);
+     zeros(3, 9),eye(3);
      zeros(3, 12)];
 
 B = [zeros(5, 4);
     [1/m, 0, 0, 0];
     zeros(3, 4);
-    zeros(3, 1), diag([1/Ixx, l/Iyy, l/Izz])];
+    zeros(3, 1), diag([l/Ixx, l/Iyy, 1/Izz])];
+ 
 
-
-R = 10;
-Q = 0.1.*eye(12);
-
+R = diag([0.01, 0.1, 0.1, 0.1]);                                               
+Q = diag([1, 1, 1, 0.1, 0.1, 0.1, 1, 1, 1, 0.01, 0.01, 0.01]);
+ 
 [K, ~, ~] = lqr(A,B,Q,R);
 
 u = -K * (X - X_des);
@@ -61,8 +72,6 @@ u = -K * (X - X_des);
 F = u(1);
 
 M = u(2:4);
-
-
 
 
 
