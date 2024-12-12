@@ -53,17 +53,17 @@ Izz = 2.89e-5;
  
 A = [zeros(3), eye(3), zeros(3,6);
      zeros(3,6), [0 g 0; -g 0 0; 0 0 0], zeros(3)
-     zeros(3, 9),eye(3);
-     zeros(3, 12)];
+     zeros(3, 9), eye(3);
+     zeros(3, 12)]
 
 B = [zeros(5, 4);
     [1/m, 0, 0, 0];
     zeros(3, 4);
-    zeros(3, 1), diag([l/Ixx, l/Iyy, 1/Izz])];
+    zeros(3, 1), diag([l/Ixx, l/Iyy, 1/Izz])]
  
 
-R = diag([0.01, 0.5, 0.5, 0.5]);                                               
-Q = diag([1, 1, 1, 0.1, 0.1, 0.1, 1, 1, 1, 0.01, 0.01, 0.01]);
+R = diag([0.01, 0.1, 0.1, 0.1]);                                               
+Q = diag([0.5, 0.5, 0.5, 0.1, 0.1, 0.1, 1, 1, 1, 0.01, 0.01, 0.01]);
  
 [K, ~, ~] = lqr(A,B,Q,R);
 end
