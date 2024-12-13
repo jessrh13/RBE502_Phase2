@@ -1,4 +1,4 @@
-function [F, M, trpy, drpy] = pid_controller(qd, t, qn, params)
+function [F, M, trpy, drpy] = pid_controller(qd, t, qn, params, trajhandle)
 % CONTROLLER quadrotor controller
 % The current states are:
 % qd{qn}.pos, qd{qn}.vel, qd{qn}.euler = [roll;pitch;yaw], qd{qn}.omega
@@ -18,10 +18,17 @@ persistent icnt;
  
 % =================== Your code starts here ===================
 %% Parameter Initialization
+X = [qd{qn}.pos; qd{qn}.vel; qd{qn}.euler; qd{qn}.omega];
+
+euler_des = [0; 0; desired_state.yaw];
+omega_des = [0; 0; desired_state.yawdot];
+% 
+X_des = [desired_state.pos; desired_state.vel; euler_des; omega_des];
+ 
+
 % Position control gains
-% Updated Position Control Gains
-kp = [3; 6.5; 5]; % Adjusted for faster response
-kd = [7; 13; 3.75]; % Added damping
+kp = [4.15; 4.15; 3];
+kd = [10.25; 10.25; 3.5];
 
 % Attitude control gains
 kpr = 0.5;
@@ -37,8 +44,8 @@ kdy = 1.8;
 qd{qn}.acc_des = kd.*(-qd{qn}.vel) + kp.*(qd{qn}.pos_des-qd{qn}.pos);
 
 
-m = params.mass
-g = params.grav
+m = params.mass;
+g = params.grav;
 
 F = m*g - m*(kd(3) * qd{qn}.vel(3) + kp(3)*(qd{qn}.pos(3) - qd{qn}.pos_des(3)))
 

@@ -42,18 +42,17 @@ Ixx = 1.43e-5;
 Iyy = 1.43e-5;         
 Izz = 2.89e-5;
 
-% phi = qd{qn}.euler(1);
-% theta = qd{qn}.euler(2);
-% psi = qd{qn}.euler(3);
-% 
-% v = [cos(theta) 0 -cos(phi)*sin(theta);...
-%     0 1 sin(phi);...
-%     sin(theta) 0 cos(phi)*cos(theta)];
+phi = qd{qn}.euler(1);
+theta = qd{qn}.euler(2);
+psi = qd{qn}.euler(3);
 
+v = [cos(theta) 0 -cos(phi)*sin(theta);...
+    0 1 sin(phi);...
+    sin(theta) 0 cos(phi)*cos(theta)];
  
 A = [zeros(3), eye(3), zeros(3,6);
      zeros(3,6), [0 g 0; -g 0 0; 0 0 0], zeros(3)
-     zeros(3, 9),eye(3);
+     zeros(3, 9), inv(v);
      zeros(3, 12)];
 
 B = [zeros(5, 4);
